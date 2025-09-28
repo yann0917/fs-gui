@@ -1,7 +1,7 @@
 # Go parameters
-.PHONY: build test clean run build-race build-linux build-osx build-windows test-race enable-race frontend-build
+.PHONY: build test clean run build-race build-linux build-osx build-osx-arm64 build-windows test-race enable-race frontend-build
 
-all: clean setup frontend-build build-linux build-osx build-windows
+all: clean setup frontend-build build-linux build-osx build-osx-arm64 build-windows
 
 BUILD_ENV=CGO_ENABLED=0
 BUILD=`date +%FT%T%z`
@@ -12,7 +12,7 @@ GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
-TARGET_EXEC=fs-gui
+TARGET_EXEC=fs
 
 setup:
 	mkdir -p Releases
@@ -25,6 +25,9 @@ build-linux: setup frontend-build
 
 build-osx: setup frontend-build
 	$(BUILD_ENV) GOARCH=amd64 GOOS=darwin $(GOBUILD) $(LDFLAGS) -o Releases/$(TARGET_EXEC)-darwin-amd64
+
+build-osx-arm64: setup frontend-build
+	$(BUILD_ENV) GOARCH=arm64 GOOS=darwin $(GOBUILD) $(LDFLAGS) -o Releases/$(TARGET_EXEC)-darwin-arm64
 
 build-windows: setup frontend-build
 	$(BUILD_ENV) GOARCH=amd64 GOOS=windows $(GOBUILD) $(LDFLAGS) -o Releases/$(TARGET_EXEC)-windows-amd64.exe

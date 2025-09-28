@@ -62,6 +62,12 @@ echo "start build darwin/amd64 >>>"
 CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags '-w -s' -o ./Releases/fs-darwin-amd64 .
 # compress_binary "./Releases/fs-darwin-amd64" "fs-darwin-amd64"
 
+# 【darwin/arm64】
+echo "start build darwin/arm64 >>>"
+CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -ldflags '-w -s' -o ./Releases/fs-darwin-arm64 .
+# compress_binary "./Releases/fs-darwin-arm64" "fs-darwin-arm64"
+
+
 # 【windows/amd64】
 echo "start build windows/amd64 >>>"
 CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags '-w -s' -o ./Releases/fs-windows-amd64.exe .
