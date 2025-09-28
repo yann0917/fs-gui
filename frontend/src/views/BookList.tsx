@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate, useLocation } from 'react-router-dom'
 import { FileX } from 'lucide-react'
 
 import { useToast } from '@/hooks/use-toast'
-import { api } from '@/services/api'
+import { api, ApiError } from '@/services/api'
 
 import type { Book, Category, Course } from '@/types'
 
@@ -127,9 +127,10 @@ export default function BookList() {
         navigate(`/books?businessType=${defaultBusinessType}`, { replace: true })
       }
     } catch (error) {
+      console.error('Failed to fetch categories:', error)
       toast({
         title: '获取分类失败',
-        description: '请稍后重试',
+        description: error instanceof ApiError ? error.msg : '请稍后重试',
         variant: 'destructive'
       })
     }
@@ -216,7 +217,7 @@ export default function BookList() {
     } catch (error) {
       toast({
         title: '获取书籍失败',
-        description: '请稍后重试',
+        description: error instanceof ApiError ? error.msg : '请稍后重试',
         variant: 'destructive'
       })
     } finally {
@@ -279,7 +280,7 @@ export default function BookList() {
     } catch (error) {
       toast({
         title: '获取课程失败',
-        description: '请稍后重试',
+        description: error instanceof ApiError ? error.msg : '请稍后重试',
         variant: 'destructive'
       })
     } finally {
@@ -308,7 +309,7 @@ export default function BookList() {
     } catch (error) {
       toast({
         title: '下载失败',
-        description: '请稍后重试',
+        description: error instanceof ApiError ? error.msg : '请稍后重试',
         variant: 'destructive'
       })
     }

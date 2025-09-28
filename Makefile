@@ -1,7 +1,7 @@
 # Go parameters
-.PHONY: build test clean run build-race build-linux build-osx build-windows test-race enable-race
+.PHONY: build test clean run build-race build-linux build-osx build-windows test-race enable-race frontend-build
 
-all: clean setup build-linux build-osx build-windows
+all: clean setup frontend-build build-linux build-osx build-windows
 
 BUILD_ENV=CGO_ENABLED=0
 BUILD=`date +%FT%T%z`
@@ -17,18 +17,21 @@ TARGET_EXEC=fs-gui
 setup:
 	mkdir -p Releases
 
-build-linux: setup
+frontend-build:
+	cd frontend && yarn install && yarn build
+
+build-linux: setup frontend-build
 	$(BUILD_ENV) GOARCH=amd64 GOOS=linux $(GOBUILD) $(LDFLAGS) -o Releases/$(TARGET_EXEC)-linux-amd64
 
-build-osx: setup
-	$(UILD_ENV) GOARCH=amd64 GOOS=darwin $(GOBUILD) $(LDFLAGS) -o Releases/$(TARGET_EXEC)-darwin-amd64
+build-osx: setup frontend-build
+	$(BUILD_ENV) GOARCH=amd64 GOOS=darwin $(GOBUILD) $(LDFLAGS) -o Releases/$(TARGET_EXEC)-darwin-amd64
 
-build-windows: setup
+build-windows: setup frontend-build
 	$(BUILD_ENV) GOARCH=amd64 GOOS=windows $(GOBUILD) $(LDFLAGS) -o Releases/$(TARGET_EXEC)-windows-amd64.exe
 
 default: all
 
-build:
+build: frontend-build
 	$(BUILD_ENV) $(GOBUILD) $(RACE) $(LDFLAGS) -o $(TARGET_EXEC) -v .
 
 test:
@@ -47,3 +50,4 @@ run:
 clean:
 	$(GOCLEAN)
 	rm -rf Releases
+	rm -rf frontend/dist

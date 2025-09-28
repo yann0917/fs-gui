@@ -6,9 +6,9 @@ import { api } from '@/services/api'
 interface AuthState {
   user: User | null
   isLoggedIn: boolean
-  loginByPhone: (phone: string, code: string) => Promise<any>
-  loginByPassword: (phone: string, password: string) => Promise<any>
-  setUser: (userData: { data: User }) => void
+  loginByPhone: (phone: string, code: string) => Promise<User>
+  loginByPassword: (phone: string, password: string) => Promise<User>
+  setUser: (userData: User) => void
   logout: () => Promise<void>
 }
 
@@ -19,20 +19,20 @@ export const useAuthStore = create<AuthState>()(
       isLoggedIn: false,
 
       loginByPhone: async (phone: string, code: string) => {
-        const response = await api.loginByPhone(phone, code)
-        get().setUser(response.data)
-        return response
+        const userData = await api.loginByPhone(phone, code)
+        get().setUser(userData)
+        return userData
       },
 
       loginByPassword: async (phone: string, password: string) => {
-        const response = await api.loginByPassword(phone, password)
-        get().setUser(response.data)
-        return response
+        const userData = await api.loginByPassword(phone, password)
+        get().setUser(userData)
+        return userData
       },
 
-      setUser: (userData: { data: User }) => {
+      setUser: (userData: User) => {
         set({
-          user: userData.data,
+          user: userData,
           isLoggedIn: true
         })
       },

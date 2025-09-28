@@ -3,7 +3,7 @@ import { useParams, useSearchParams } from 'react-router-dom'
 import { Play, User, PlayCircle, Check, FileX, Clock } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth'
 import { useToast } from '@/hooks/use-toast'
-import { api } from '@/services/api'
+import { api, ApiError } from '@/services/api'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -79,7 +79,7 @@ export default function CourseDetail() {
       console.error('Failed to load course detail:', error)
       toast({
         title: '加载失败',
-        description: '获取课程详情失败，请稍后重试',
+        description: error instanceof ApiError ? error.msg : '获取课程详情失败，请稍后重试',
         variant: 'destructive'
       })
     } finally {
@@ -193,7 +193,7 @@ export default function CourseDetail() {
     } catch (error) {
       toast({
         title: '下载失败',
-        description: '请稍后重试',
+        description: error instanceof ApiError ? error.msg : '请稍后重试',
         variant: 'destructive'
       })
     }

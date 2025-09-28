@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/yann0917/fs-gui/config"
@@ -459,8 +460,32 @@ func (s *Service) CourseList(param CourseListParam) (list []Course, err error) {
 	return
 }
 
+// validateAesKey 验证AES密钥
+func validateAesKey() error {
+	// 检查密钥是否存在
+	if AesKey == "" {
+		return errors.New("AES密钥未配置，请在config.yaml中设置aeskey")
+	}
+
+	// 去除空格并检查长度
+	key := strings.TrimSpace(AesKey)
+	keyLength := len(key)
+
+	// 检查长度是否为24或32
+	if keyLength != 24 && keyLength != 32 {
+		return fmt.Errorf("AES密钥长度无效，当前长度: %d，需要长度: 24 或 32", keyLength)
+	}
+
+	return nil
+}
+
 // handleEncryptParam 加密参数
 func handleEncryptParam(param interface{}) (cipher string, err error) {
+	// 验证AES密钥
+	if err = validateAesKey(); err != nil {
+		return "", err
+	}
+
 	data, err := utils.MarshalJSON(param)
 	if err != nil {
 		return
@@ -495,6 +520,11 @@ func handleHTTPResponse(resp *resty.Response, err error) ([]byte, error) {
 }
 
 func handleJSONParse(reader []byte, v interface{}) error {
+	// 验证AES密钥
+	if err := validateAesKey(); err != nil {
+		return err
+	}
+
 	result := new(Response)
 
 	plainText, err := utils.AesEcbDecryptByBase64(string(reader), []byte(AesKey))

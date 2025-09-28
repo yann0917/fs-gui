@@ -4,7 +4,7 @@ import { Play, Download } from 'lucide-react'
 
 import { useAuthStore } from '@/stores/auth'
 import { useToast } from '@/hooks/use-toast'
-import { api } from '@/services/api'
+import { api, ApiError } from '@/services/api'
 import { Button } from '@/components/ui/button'
 import DownloadFormatDialog from '@/components/DownloadFormatDialog'
 import { usePlayerStore } from '@/stores/player'
@@ -155,7 +155,7 @@ export default function BookDetail() {
     } catch (error) {
       toast({
         title: '加载失败',
-        description: '获取书籍详情失败，请稍后重试',
+        description: error instanceof ApiError ? error.msg : '获取书籍详情失败，请稍后重试',
         variant: 'destructive'
       })
     } finally {
@@ -193,7 +193,7 @@ export default function BookDetail() {
         } catch (error) {
           toast({
             title: '加载失败',
-            description: '获取模块内容失败，请稍后重试',
+            description: error instanceof ApiError ? error.msg : '获取模块内容失败，请稍后重试',
             variant: 'destructive'
           })
         } finally {
@@ -223,7 +223,7 @@ export default function BookDetail() {
     } catch (error) {
       toast({
         title: '下载失败',
-        description: '请稍后重试',
+        description: error instanceof ApiError ? error.msg : '请稍后重试',
         variant: 'destructive'
       })
     }

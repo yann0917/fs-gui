@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/use-toast'
-import { api } from '@/services/api'
+import { api, ApiError } from '@/services/api'
 import { useAuthStore } from '@/stores/auth'
 
 interface LoginDialogProps {
@@ -46,10 +46,10 @@ export default function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
         title: '发送成功',
         description: '验证码已发送到您的手机'
       })
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: '发送验证码失败',
-        description: error.response?.data?.msg || error.response?.data?.error || '发送失败，请稍后重试',
+        description: error instanceof ApiError ? error.msg : '发送失败，请稍后重试',
         variant: 'destructive'
       })
     }
@@ -99,10 +99,10 @@ export default function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
       
       onOpenChange(false)
       setTimeout(() => window.location.reload(), 500)
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: '登录失败',
-        description: error.response?.data?.msg || error.response?.data?.error || '登录失败，请稍后重试',
+        description: error instanceof ApiError ? error.msg : '登录失败，请稍后重试',
         variant: 'destructive'
       })
     }

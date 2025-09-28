@@ -45,4 +45,5 @@ fs-gui_*
 
 # 输出目录
 output/
+Releases/
 config.yaml
