@@ -26,8 +26,8 @@ go.work.sum
 
 .vscode
 .idea
-dist/
 frontend/node_modules/
+# 允许 frontend/dist 被提交，用于 go:embed
 *_token
 downloader/*.jpg
 tmp/
