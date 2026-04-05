@@ -71,7 +71,7 @@ export default function CourseDetail() {
     setLoading(true)
     try {
       const courseResponse = await api.getCourseDetail(id)
-      setCourse(courseResponse.data)
+      setCourse(courseResponse)
 
       // 加载第一页章节列表
       await loadArticles()
@@ -98,17 +98,16 @@ export default function CourseDetail() {
         pageNo: pageToLoad,
         pageSize: 20
       })
-      
+
       if (loadMore) {
-        setArticles(prev => [...prev, ...response.data])
+        setArticles(prev => [...prev, ...response])
         setCurrentPage(prev => prev + 1)
       } else {
-        setArticles(response.data)
-        setCurrentPage(2) // 下次加载第2页
+        setArticles(response)
+        setCurrentPage(2)
       }
-      
-      // 检查是否还有更多数据
-      setHasMore(response.data && response.data.length === 20)
+
+      setHasMore(response.length === 20)
     } catch (error) {
       console.error('Failed to load articles:', error)
     } finally {

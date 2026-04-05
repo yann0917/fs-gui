@@ -192,27 +192,28 @@ export default function BookList() {
     }
     
     try {
+      const pageSize = 15
       const params = {
         businessType: currentBusinessType,
         classifyIds: currentCateIds.length > 0 ? currentCateIds : undefined,
         publishYear: currentYear || undefined,
         sortType: 1,
         pageNo: loadMore ? currentPage : 1,
-        pageSize: 15
+        pageSize
       }
       
       const response = await api.getBooks(params)
-      const books = response.data || []
+      const books = response || []
       
       if (loadMore && books.length > 0) {
         setAllBooks(prevBooks => [...prevBooks, ...books])
         setCurrentPage(prev => prev + 1)
       } else if (!loadMore) {
         setAllBooks(books)
-        setCurrentPage(2) // 下一页是第2页
+        setCurrentPage(2)
       }
       
-      setHasMore(books.length === 15)
+      setHasMore(books.length === pageSize)
       
     } catch (error) {
       toast({
@@ -255,27 +256,28 @@ export default function BookList() {
     }
     
     try {
+      const pageSize = 15
       const params = {
         sortType: 1,
         platform: 3,
         businessZone: 2,
         classifyIds: currentCateIds.length > 0 ? currentCateIds : undefined,
         pageNo: loadMore ? currentPage : 1,
-        pageSize: 15
+        pageSize
       }
       
       const response = await api.getCourses(params)
-      const courses = response.data || []
+      const courses = response || []
       
       if (loadMore && courses.length > 0) {
         setAllCourses(prevCourses => [...prevCourses, ...courses])
         setCurrentPage(prev => prev + 1)
       } else if (!loadMore) {
         setAllCourses(courses)
-        setCurrentPage(2) // 下一页是第2页
+        setCurrentPage(2)
       }
       
-      setHasMore(courses.length === 15)
+      setHasMore(courses.length === pageSize)
       
     } catch (error) {
       toast({

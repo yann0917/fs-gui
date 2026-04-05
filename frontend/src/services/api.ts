@@ -3,11 +3,11 @@ import { getCookie } from '@/lib/utils'
 import type {
   User,
   Category,
-  BookResponse,
+  Book,
   BookDetail,
-  CourseResponse,
-  CourseDetailResponse,
-  CourseArticleResponse
+  Course,
+  CourseDetail,
+  CourseArticle
 } from '@/types'
 
 // API响应接口
@@ -153,19 +153,19 @@ export const api = {
     sortType: number
     pageNo?: number
     pageSize?: number
-  }): Promise<BookResponse> {
-    const response = await apiClient.get('/api/books', { params })
-    return handleApiResponse(response.data)
+  }): Promise<Book[]> {
+    const res = await apiClient.get('/api/books', { params })
+    return handleApiResponse<Book[]>(res.data)
   },
 
-  async getBookDetail(id: string): Promise<{ data: BookDetail }> {
-    const response = await apiClient.get(`/api/books/${id}`)
-    return handleApiResponse(response.data)
+  async getBookDetail(id: string): Promise<BookDetail> {
+    const res = await apiClient.get(`/api/books/${id}`)
+    return handleApiResponse<BookDetail>(res.data)
   },
 
-  async getBookModuleDetail(id: string, fragmentId: string): Promise<{ data: BookDetail }> {
-    const response = await apiClient.get(`/api/books/${id}/module?fragmentId=${fragmentId}`)
-    return handleApiResponse(response.data)
+  async getBookModuleDetail(id: string, fragmentId: string): Promise<BookDetail> {
+    const res = await apiClient.get(`/api/books/${id}/module?fragmentId=${fragmentId}`)
+    return handleApiResponse<BookDetail>(res.data)
   },
 
   // 课程相关
@@ -176,22 +176,22 @@ export const api = {
     pageSize?: number
     platform?: number
     businessZone?: number
-  }): Promise<CourseResponse> {
-    const response = await apiClient.get('/api/courses', { params })
-    return handleApiResponse(response.data)
+  }): Promise<Course[]> {
+    const res = await apiClient.get('/api/courses', { params })
+    return handleApiResponse<Course[]>(res.data)
   },
 
-  async getCourseDetail(id: string): Promise<CourseDetailResponse> {
-    const response = await apiClient.get(`/api/courses/${id}`)
-    return handleApiResponse(response.data)
+  async getCourseDetail(id: string): Promise<CourseDetail> {
+    const res = await apiClient.get(`/api/courses/${id}`)
+    return handleApiResponse<CourseDetail>(res.data)
   },
 
   async getCourseArticles(courseId: string, params: {
     pageNo?: number
     pageSize?: number
-  }): Promise<CourseArticleResponse> {
-    const response = await apiClient.get(`/api/courses/${courseId}/articles`, { params })
-    return handleApiResponse(response.data)
+  }): Promise<CourseArticle[]> {
+    const res = await apiClient.get(`/api/courses/${courseId}/articles`, { params })
+    return handleApiResponse<CourseArticle[]>(res.data)
   },
 
   // 下载相关

@@ -130,24 +130,24 @@ export default function BookDetail() {
     setLoading(true)
     try {
       const response = await api.getBookDetail(id)
-      setBook(response.data)
-      
+      setBook(response)
+
       // 清空模块内容缓存（新书籍时清理）
       moduleContentCache.current = {}
       setModuleContent('')
-      
+
       // 设置 tabs
-      if (response.data.articles?.length) {
-        setTabs(response.data.articles.map((article: any) => ({
+      if (response.articles?.length) {
+        setTabs(response.articles.map((article: any) => ({
           fragmentId: article.fragmentId,
           moduleCode: article.moduleCode,
           moduleName: article.moduleName
         })))
       }
-      
+
       // 提取封面图片主色调
-      if (response.data.bookInfo?.coverImg) {
-        extractDominantColor(response.data.bookInfo.coverImg)
+      if (response.bookInfo?.coverImg) {
+        extractDominantColor(response.bookInfo.coverImg)
       }
       
       // 默认选择简介 tab
@@ -182,7 +182,7 @@ export default function BookDetail() {
       setTimeout(async () => {
         try {
           const response = await api.getBookModuleDetail(id, String(currentTabInfo.fragmentId))
-          const content = response.data.content || ''
+          const content = response.content || ''
           
           // 过滤掉动态注入的CSS链接，防止全局样式污染
           const cleanContent = content.replace(/<link[^>]*>/gi, '')
